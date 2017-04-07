@@ -2291,6 +2291,10 @@ class BaseImage(Resource):
             self.raise_exception()
 
     @manipulative
+    def reset_iterator(self):
+        library.MagickResetIterator(self.wand)
+
+    @manipulative
     def merge_layers(self, method):
         """Composes all the image layers from the current given image onward
         to produce a single image of the merged layers.
@@ -2764,8 +2768,9 @@ class Image(BaseImage):
         manager.
 
         """
-        for i in range(0, len(self.sequence)):
-            self.sequence.pop()
+        if self.sequence is not None:
+            for i in range(0, len(self.sequence)):
+                self.sequence.pop()
         super(Image, self).destroy()
 
     def read(self, file=None, filename=None, blob=None, resolution=None):
